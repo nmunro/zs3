@@ -190,11 +190,10 @@
                                        &rest initargs &key
                                        &allow-other-keys)
   (declare (ignore initargs))
-  (when (eql (method request) :head)
-    ;; https://forums.aws.amazon.com/thread.jspa?messageID=340398 -
-    ;; when using the bare endpoint, the 301 redirect for a HEAD
-    ;; request does not include enough info to actually redirect. Use
-    ;; the bucket endpoint pre-emptively instead
+  (when (bucket request)
+    ;; Always use virtual-hosted style for all bucket operations.
+    ;; Path-style access is blocked by AWS for buckets created after Sep 30, 2020.
+    ;; Virtual-hosted style: https://bucket.s3.region.amazonaws.com/key
     (setf (endpoint request) (format nil "~A.~A"
                                      (bucket request)
                                      *s3-endpoint*)))

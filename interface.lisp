@@ -150,9 +150,7 @@ constraint."
 (defun bucket-exists-p (bucket &key
                                  ((:credentials *credentials*) *credentials*)
                                  ((:backoff *backoff*) *backoff*))
-  (let ((code (nth-value 1 (head :bucket bucket
-                                 :parameters
-                                 (parameters-alist :max-keys 0)))))
+  (let ((code (nth-value 1 (head :bucket bucket))))
     (not (<= 400 code 599))))
 
 (defun create-bucket (name &key
